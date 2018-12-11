@@ -43,7 +43,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     // Should helpers be included via tslib
-    "importHelpers": true,
+    "importHelpers": false,
     "noEmitHelpers": false,
     // Typings import
     // "typeRoots": [],

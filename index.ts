@@ -65,9 +65,12 @@ export const createMobxThemeProvider = <
     }
 
     public render() {
+      // The re-rendering only occurs if the object identity of the theme changes
+      const themeObj = { ...(this.state.theme || {})! };
+
       return jsx(ThemeContext.Provider, {
-        value: this.state.theme || {},
         children: this.props.children,
+        value: themeObj,
       });
     }
   };
