@@ -4,6 +4,14 @@
   "version": "0.0.1",
   "author": "Frédérique Mittelstaedt <npm@gfm.io> (https://www.gfm.io)",
   "license": "MIT",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "keywords": [
+    "mobx",
+    "emotion",
+    "theme",
+    "theming"
+  ],
   "scripts": {
     "compile": "tsc"
   },
