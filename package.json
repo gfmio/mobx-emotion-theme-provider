@@ -1,7 +1,7 @@
 {
   "name": "mobx-emotion-theme-provider",
   "description": "An observing theme provider for emotion",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "Frédérique Mittelstaedt <npm@gfm.io> (https://www.gfm.io)",
   "license": "MIT",
   "main": "index.js",
