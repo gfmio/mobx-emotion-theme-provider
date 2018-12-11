@@ -1,0 +1,20 @@
+{
+  "name": "mobx-emotion-theme-provider",
+  "description": "An observing theme provider for emotion",
+  "version": "0.0.1",
+  "author": "Frédérique Mittelstaedt <npm@gfm.io> (https://www.gfm.io)",
+  "license": "MIT",
+  "scripts": {
+    "compile": "tsc"
+  },
+  "devDependencies": {
+    "@types/react": "^16.7.13",
+    "tslint": "^5.11.0",
+    "typescript": "^3.2.2"
+  },
+  "dependencies": {
+    "@emotion/core": "^10.0.4",
+    "mobx-react": "^5.4.2",
+    "react": "^16.6.3"
+  }
+}
