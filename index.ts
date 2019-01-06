@@ -87,7 +87,7 @@ const fromStore = <Theme extends object, ThemeKey extends string = "theme">(
   > = (props) =>
     jsx(ThemeContext.Provider, {
       children: props.children,
-      value: deepCopy<Theme>(props[store] as Theme) as object,
+      value: deepCopy<object>(props[store]! as object),
     });
 
   // Set the display name
