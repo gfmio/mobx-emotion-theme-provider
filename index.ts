@@ -3,6 +3,7 @@
  */
 
 // tslint:disable:no-namespace
+// tslint:disable:no-shadowed-variable
 
 /* @jsx jsx */
 
@@ -28,7 +29,6 @@ namespace MobxThemeProvider {
     theme?: Theme;
   }
 
-  // tslint:disable-next-line:no-shadowed-variable
   export namespace Custom {
     /**
      * The props of the `MobxThemeProvider.Custom` function component
@@ -36,12 +36,40 @@ namespace MobxThemeProvider {
      * @param `ThemeKey` Type of the name of the MobX store
      * @param `store` Name of the Mobx store
      */
-    // tslint:disable-next-line:no-shadowed-variable
     export interface Props<ThemeKey extends string = "theme"> {
       store?: ThemeKey;
     }
   }
 }
+
+/**
+ * Deep copies a value including computed properties
+ *
+ * @param src The copied value
+ */
+const deepCopy = <T extends any>(src: T): T => {
+  // If src is not an object, it's a function or primitive and can be returned immediately
+  if (typeof src !== "object") {
+    return src;
+  }
+
+  // If src is null, return it as-is
+  if (src === null) {
+    return src;
+  }
+
+  // If src is an array, return a new array with elementes deep copied
+  if (Array.isArray(src)) {
+    return src.map((value: any) => deepCopy(value));
+  }
+
+  // If it's a "regular" object, iterate through all keys and deep copy the values
+  const o: any = {};
+  for (const key of Object.keys(src)) {
+    o[key] = deepCopy(src[key]);
+  }
+  return o;
+};
 
 /**
  * Creates a `MobxThemeProvider` that reads the emotion theme from the
@@ -51,36 +79,21 @@ namespace MobxThemeProvider {
  */
 const fromStore = <Theme extends object, ThemeKey extends string = "theme">(
   store: ThemeKey = "theme" as ThemeKey,
-): React.ComponentClass<
-  MobxThemeProvider.Props<Theme, ThemeKey>,
-  MobxThemeProvider.State<Theme>
-> &
+): React.FunctionComponent<MobxThemeProvider.Props<Theme, ThemeKey>> &
   IWrappedComponent<MobxThemeProvider.Props<Theme, ThemeKey>> => {
-  const mobxThemeProvider: React.ComponentClass<
-    MobxThemeProvider.Props<Theme, ThemeKey>,
-    MobxThemeProvider.State<Theme>
-  > = class extends React.Component<
-    MobxThemeProvider.Props<Theme, ThemeKey>,
-    MobxThemeProvider.State<Theme>
-  > {
-    constructor(props: MobxThemeProvider.Props<Theme, ThemeKey>) {
-      super(props);
-      this.state = { theme: this.props[store] as Theme | undefined };
-    }
+  // Create the function component
+  const mobxThemeProvider: React.FunctionComponent<
+    MobxThemeProvider.Props<Theme, ThemeKey> & { children?: React.ReactNode }
+  > = (props) =>
+    jsx(ThemeContext.Provider, {
+      children: props.children,
+      value: deepCopy<Theme>(props[store] as Theme) as object,
+    });
 
-    public render() {
-      // The re-rendering only occurs if the object identity of the theme changes
-      const themeObj = { ...(this.state.theme || {})! };
+  // Set the display name
+  mobxThemeProvider.displayName = `MobxThemeProvider("${store}")`;
 
-      return jsx(ThemeContext.Provider, {
-        children: this.props.children,
-        value: themeObj,
-      });
-    }
-  };
-
-  (mobxThemeProvider as React.ComponentClass).displayName = `MobxThemeProvider("${store}")`;
-
+  // Return the injected, observer component
   return inject(store)(observer(mobxThemeProvider));
 };
 
