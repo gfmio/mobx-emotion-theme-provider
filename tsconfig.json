@@ -4,9 +4,9 @@
     "target": "es3",
     "module": "commonjs",
     // Source maps & declarations
-    "sourceMap": true,
+    "sourceMap": false,
     "declaration": true,
-    "declarationMap": true,
+    "declarationMap": false,
     // Module resolution
     "moduleResolution": "node",
     "allowJs": false,

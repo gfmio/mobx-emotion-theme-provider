@@ -2,38 +2,45 @@
  * `mobx-emotion-theme-provider` package
  */
 
-import React from "react";
+// tslint:disable:no-namespace
+
+/* @jsx jsx */
+
 import { jsx, ThemeContext } from "@emotion/core";
-import { inject, observer, IWrappedComponent } from "mobx-react";
+import { inject, IWrappedComponent, observer } from "mobx-react";
+import React from "react";
 
-/**
- * The props of a `MobxThemeProvider`
- *
- * @param `ThemeKey` Type of the name of the MobX store
- * @param `Theme` Theme type
- */
-export type MobxThemeProviderProps<
-  Theme extends object,
-  ThemeKey extends string = "theme"
-> = { [key in ThemeKey]?: Theme };
+namespace MobxThemeProvider {
+  /**
+   * The props of a `MobxThemeProvider`
+   *
+   * @param `ThemeKey` Type of the name of the MobX store
+   * @param `Theme` Theme type
+   */
+  export type Props<Theme extends object, ThemeKey extends string = "theme"> = {
+    [key in ThemeKey]?: Theme
+  };
 
-/**
- * The props of the `CustomMobxThemeProvider` function component
- *
- * @param `ThemeKey` Type of the name of the MobX store
- * @param `store` Name of the Mobx store
- */
-export interface CustomMobxThemeProviderProps<
-  ThemeKey extends string = "theme"
-> {
-  store?: ThemeKey;
-}
+  /**
+   * The state of a `ConcreteMobxThemeProvider`
+   */
+  export interface State<Theme> {
+    theme?: Theme;
+  }
 
-/**
- * The state of a `ConcreteMobxThemeProvider`
- */
-export interface MobxThemeProviderState<Theme> {
-  theme?: Theme;
+  // tslint:disable-next-line:no-shadowed-variable
+  export namespace Custom {
+    /**
+     * The props of the `MobxThemeProvider.Custom` function component
+     *
+     * @param `ThemeKey` Type of the name of the MobX store
+     * @param `store` Name of the Mobx store
+     */
+    // tslint:disable-next-line:no-shadowed-variable
+    export interface Props<ThemeKey extends string = "theme"> {
+      store?: ThemeKey;
+    }
+  }
 }
 
 /**
@@ -42,24 +49,21 @@ export interface MobxThemeProviderState<Theme> {
  *
  * @param `store` The name of the mobx store to use as the emotion theme
  */
-export const createMobxThemeProvider = <
-  Theme extends object,
-  ThemeKey extends string = "theme"
->(
+const fromStore = <Theme extends object, ThemeKey extends string = "theme">(
   store: ThemeKey = "theme" as ThemeKey,
 ): React.ComponentClass<
-  MobxThemeProviderProps<Theme, ThemeKey>,
-  MobxThemeProviderState<Theme>
+  MobxThemeProvider.Props<Theme, ThemeKey>,
+  MobxThemeProvider.State<Theme>
 > &
-  IWrappedComponent<MobxThemeProviderProps<Theme, ThemeKey>> => {
+  IWrappedComponent<MobxThemeProvider.Props<Theme, ThemeKey>> => {
   const mobxThemeProvider: React.ComponentClass<
-    MobxThemeProviderProps<Theme, ThemeKey>,
-    MobxThemeProviderState<Theme>
+    MobxThemeProvider.Props<Theme, ThemeKey>,
+    MobxThemeProvider.State<Theme>
   > = class extends React.Component<
-    MobxThemeProviderProps<Theme, ThemeKey>,
-    MobxThemeProviderState<Theme>
+    MobxThemeProvider.Props<Theme, ThemeKey>,
+    MobxThemeProvider.State<Theme>
   > {
-    constructor(props: MobxThemeProviderProps<Theme, ThemeKey>) {
+    constructor(props: MobxThemeProvider.Props<Theme, ThemeKey>) {
       super(props);
       this.state = { theme: this.props[store] as Theme | undefined };
     }
@@ -85,18 +89,28 @@ export const createMobxThemeProvider = <
  * emotion theme from the mobx store with the provided name and injects it
  * into emotion.
  */
-export const CustomMobxThemeProvider = <
+const Custom: React.FunctionComponent<MobxThemeProvider.Custom.Props> = <
   Theme extends object = any,
   ThemeKey extends string = "theme"
 >({
   store,
-}: CustomMobxThemeProviderProps<ThemeKey>) =>
-  jsx(createMobxThemeProvider<Theme, ThemeKey>(store));
+}: MobxThemeProvider.Custom.Props<ThemeKey>) =>
+  jsx(fromStore<Theme, ThemeKey>(store));
 
 /**
  * The default `MobxThemeProvider` that reads the emotion theme from
  * the MobX store `theme`
  */
-export const MobxThemeProvider = createMobxThemeProvider<any>();
+const MobxThemeProvider: React.ComponentClass<
+  MobxThemeProvider.Props<any, "theme">,
+  MobxThemeProvider.State<any>
+> &
+  IWrappedComponent<MobxThemeProvider.Props<any, "theme">> & {
+    Custom: typeof Custom;
+    fromStore: typeof fromStore;
+  } = fromStore<any>() as any;
+
+MobxThemeProvider.fromStore = fromStore;
+MobxThemeProvider.Custom = Custom;
 
 export default MobxThemeProvider;

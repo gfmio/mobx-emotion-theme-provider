@@ -34,29 +34,29 @@ ReactDOM.render(
 
 The theme will be available to all components created with `styled` from `@emotion/styled`, components augmented by `withTheme` from `emotion-theming` and on the `css` prop of all elements if you use the `jsx` factory function from `@emotion/core`.
 
-If the MobX store of your theme is not called `theme`, use the `CustomMobxThemeProvider` component or the `createMobxThemeProvider` factory function.
+If the MobX store of your theme is not called `theme`, use the `MobxThemeProvider.Custom` component or the `MobxThemeProvider.withStore` factory function.
 
 ```tsx
-import { CustomMobxThemeProvider } from "mobx-emotion-theme-provider";
+import MobxThemeProvider from "mobx-emotion-theme-provider";
 
 const theme = {};
 
 ReactDOM.render(
   <Provider customField={theme}>
-    <CustomMobxThemeProvider store="customField">
+    <MobxThemeProvider.Custom store="customField">
       <App />
-    </CustomMobxThemeProvider>
+    </MobxThemeProvider.Custom>
   </Provider>,
   document.getElementById("app"),
 );
 
 // or
 
-import { createMobxThemeProvider } from "mobx-emotion-theme-provider";
+import MobxThemeProvider from "mobx-emotion-theme-provider";
 
 const anotherTheme = {};
 
-const MyThemeProvier = createMobxThemeProvider("anotherField");
+const MyThemeProvier = MobxThemeProvider.fromStore("anotherField");
 
 ReactDOM.render(
   <Provider anotherField={anotherTheme}>
@@ -86,7 +86,7 @@ npm install mobx-emotion-theme-provider
 
 MIT License
 
-Copyright 2018 Frédérique Mittelstaedt
+Copyright 2019 Frédérique Mittelstaedt
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
