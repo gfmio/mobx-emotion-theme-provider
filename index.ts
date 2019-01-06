@@ -63,7 +63,7 @@ const deepCopy = <T extends any>(src: T): T => {
 
   // If it's a "regular" object, iterate through all keys and deep copy the values
   const o: any = {};
-  for (const key of Object.keys(src)) {
+  for (const key of Object.getOwnPropertyNames(src)) {
     o[key] = deepCopy(src[key]);
   }
   return o;
@@ -77,8 +77,7 @@ const deepCopy = <T extends any>(src: T): T => {
  */
 const fromStore = <Theme extends object, ThemeKey extends string = "theme">(
   store: ThemeKey = "theme" as ThemeKey,
-): React.FunctionComponent<MobxThemeProvider.Props<Theme, ThemeKey>> &
-  IWrappedComponent<MobxThemeProvider.Props<Theme, ThemeKey>> => {
+) => {
   // Create the function component
   const mobxThemeProvider: React.FunctionComponent<
     MobxThemeProvider.Props<Theme, ThemeKey> & { children?: React.ReactNode }
