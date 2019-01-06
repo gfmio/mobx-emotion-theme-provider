@@ -5,9 +5,7 @@
 // tslint:disable:no-namespace
 // tslint:disable:no-shadowed-variable
 
-/* @jsx jsx */
-
-import { jsx, ThemeContext } from "@emotion/core";
+import { ThemeProvider } from "emotion-theming";
 import { inject, IWrappedComponent, observer } from "mobx-react";
 import React from "react";
 
@@ -85,9 +83,9 @@ const fromStore = <Theme extends object, ThemeKey extends string = "theme">(
   const mobxThemeProvider: React.FunctionComponent<
     MobxThemeProvider.Props<Theme, ThemeKey> & { children?: React.ReactNode }
   > = (props) =>
-    jsx(ThemeContext.Provider, {
+    React.createElement(ThemeProvider, {
       children: props.children,
-      value: deepCopy<object>(props[store]! as object),
+      theme: deepCopy<object>(props[store]! as object),
     });
 
   // Set the display name
@@ -108,7 +106,7 @@ const Custom: React.FunctionComponent<MobxThemeProvider.Custom.Props> = <
 >({
   store,
 }: MobxThemeProvider.Custom.Props<ThemeKey>) =>
-  jsx(fromStore<Theme, ThemeKey>(store));
+  React.createElement(fromStore<Theme, ThemeKey>(store));
 
 /**
  * The default `MobxThemeProvider` that reads the emotion theme from

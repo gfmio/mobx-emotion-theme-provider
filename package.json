@@ -21,7 +21,9 @@
     "typescript": "^3.2.2"
   },
   "dependencies": {
-    "@emotion/core": "^10.0.4",
+    "@emotion/core": "^10.0.5",
+    "emotion-theming": "^10.0.5",
+    "mobx": "^5.8.0",
     "mobx-react": "^5.4.2",
     "react": "^16.6.3"
   }
